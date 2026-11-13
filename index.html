@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abandoned but Not Forgotten: NASA’s Machines on the Moon and Mars</title>
+<meta name="description" content="An interactive story of the NASA instruments left on the Moon and Mars, what each one did, and what it discovered.">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1430;--panel:#18204a;--ink:#ece4d3;--dim:#a9b0c8;--moon:#c4cad6;--mars:#e0674a;--live:#5fd4c0;--line:#2c3769;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1ede3;--panel:#e3ddcc;--ink:#1c2245;--dim:#555c7a;--moon:#6b7385;--mars:#b8432a;--live:#0b7d6c;--line:#c9c1ab;color-scheme:light}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;line-height:1.65}
+main{max-width:860px;margin:0 auto;padding:28px 18px 60px}
+h1,h2,.story{font-family:Newsreader,Georgia,serif}
+h1{font-size:clamp(2.3rem,8vw,4rem);line-height:1.08;margin:0;font-weight:600}
+.lead{max-width:58ch;color:var(--dim);font-size:1.05rem;margin:14px 0 0}
+.chips{display:flex;gap:8px;margin:26px 0 10px;flex-wrap:wrap}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--live);outline-offset:2px}
+.chip{background:none;border:1px solid var(--line);border-radius:99px;padding:2px 16px;font-size:.92rem}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.strip{display:flex;overflow-x:auto;padding:14px 0 18px;border-bottom:1px solid var(--line)}
+.stop{flex:0 0 auto;width:112px;background:none;border:0;text-align:center;padding:0 6px;position:relative}
+.stop::before{content:"";position:absolute;top:9px;left:0;right:0;height:1px;background:var(--line)}
+.dot{position:relative;display:block;width:18px;height:18px;border-radius:50%;margin:0 auto 6px;background:var(--moon);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--moon)}
+.stop.mars .dot{background:var(--mars);box-shadow:0 0 0 1px var(--mars)}
+.stop.live .dot{box-shadow:0 0 0 2px var(--live)}
+.stop[aria-selected=true] .dot{transform:scale(1.5)}
+.stop small{display:block;color:var(--dim);font-size:.78rem}
+.stop .n{font-size:.84rem;line-height:1.35;display:block}
+.stop[aria-selected=true] .n{font-weight:600}
+article{background:var(--panel);border-radius:14px;padding:26px 22px;margin-top:22px}
+article h2{margin:0 0 6px;font-size:2rem;line-height:1.15}
+.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--dim);font-size:.9rem}
+.tag{padding:0 12px;border-radius:99px;border:1px solid currentColor;font-size:.82rem}
+.tag.on{color:var(--live)}.tag.off{color:var(--mars)}
+.story{font-size:1.2rem;line-height:1.6;max-width:60ch;margin:16px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:620px){.cols{grid-template-columns:1fr}}
+h3{margin:0;font-size:1rem;color:var(--live);font-weight:600}
+.cols p{margin:2px 0 0}
+.last{margin-top:20px;padding:12px 16px;border-left:3px solid var(--mars);background:var(--bg);border-radius:6px}
+.nav{display:flex;justify-content:space-between;margin-top:20px}
+.nav button{background:none;border:1px solid var(--line);border-radius:8px;padding:2px 16px}
+.nav button:disabled{opacity:.35;cursor:default}
+section{margin-top:44px}
+section h2{font-size:1.7rem;margin:0 0 4px}
+.qb{margin:16px 0}
+.opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.opts button{background:none;border:1px solid var(--line);border-radius:8px;padding:2px 14px}
+.opts .ok{background:var(--live);color:var(--bg);border-color:var(--live)}
+.opts .no{background:var(--mars);color:#fff;border-color:var(--mars)}
+.score{margin-top:12px;font-weight:600}
+.src{columns:2;column-gap:28px;padding-left:18px;font-size:.88rem;color:var(--dim)}
+@media(max-width:620px){.src{columns:1}}
+.src a{color:var(--ink)}
+footer{margin-top:36px;color:var(--dim);font-size:.88rem;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<main>
+<h1>Abandoned but not forgotten</h1>
+<p class="lead">On the Moon and Mars sit machines that NASA left behind. Each one told us something about the universe before it fell silent, and a few are still talking. Pick a stop on the timeline and hear its story.</p>
+<div class="chips" role="group" aria-label="Filter by world">
+<button class="chip" data-f="all" aria-pressed="true">All</button>
+<button class="chip" data-f="moon" aria-pressed="false">Moon</button>
+<button class="chip" data-f="mars" aria-pressed="false">Mars</button>
+</div>
+<div class="strip" id="strip" role="tablist" aria-label="Timeline"></div>
+<article id="card" aria-live="polite"></article>
+
+<section>
+<h2>Test yourself</h2>
+<div id="quiz"></div>
+<div class="score" id="score"></div>
+</section>
+
+<section>
+<h2>Sources</h2>
+<ul class="src">
+<li><a href="https://www.nasa.gov/history/alsj/HamishALSEP.html">NASA Apollo Lunar Surface Journal: ALSEP</a></li>
+<li><a href="https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html">NASA NSSDCA: Apollo Lunar Roving Vehicle</a></li>
+<li><a href="https://ntrs.nasa.gov/citations/19710024418">NASA NTRS: Surveyor 3 camera tests</a></li>
+<li><a href="https://science.nasa.gov/earth/moon/footpads-and-footprints-humans-and-machine-meet-on-the-moon/">NASA Science: Footpads and Footprints</a></li>
+<li><a href="https://spacecenter.org/?p=16217">Space Center Houston: Apollo 11 experiments</a></li>
+<li><a href="https://www.space.com/apollo-retroreflector-experiment-still-going-50-years-later.html">Space.com: the Apollo reflector experiment</a></li>
+<li><a href="https://atmos.washington.edu/~mars/viking/lander/viking_lander/node24.html">Viking lander mission summary</a></li>
+<li><a href="https://www.jpl.nasa.gov/images/sojourners-first-images-from-mars">NASA JPL: Sojourner</a></li>
+<li><a href="https://jpl.nasa.gov/news/nasas-spirit-rover-completes-mission-on-mars">NASA JPL: Spirit completes mission</a></li>
+<li><a href="https://astronomy.com/science/mission-complete-for-opportunity-rover">Astronomy: Opportunity mission complete</a></li>
+<li><a href="https://www.astronomy.com/?p=113350">Astronomy: end of the InSight mission</a></li>
+<li><a href="https://nasaspaceflight.com/2024/01/ingenuity-final-flight">NASASpaceflight: Ingenuity’s final flight</a></li>
+<li><a href="https://www.nbcnews.com/id/wbna44429642">NBC News: LRO images of Apollo sites</a></li>
+</ul>
+</section>
+<footer>Dots with a green ring mark equipment that still returns data. Curiosity (2012) and Perseverance (2021) are still working on Mars, so they are not abandoned yet. Facts are drawn from NASA and other published sources listed above; please check them against nasa.gov before you present.</footer>
+</main>
+<script>
+const D=[
+{w:"moon",y:"1967",n:"Surveyor 3",t:"Silent",
+s:"Surveyor 3 landed in April 1967 as a robot scout for Apollo. Thirty-one months later, Apollo 12 touched down a short walk away, and Pete Conrad and Alan Bean snipped off its TV camera and other parts to carry home. It is still the only probe on another world that humans have ever visited.",
+a:"A TV camera that sent back 6,315 pictures in its first two weeks, and a scoop arm that dug into the soil to test whether the surface could hold a landing craft.",
+d:"More than 80 researchers studied the returned parts. It was the first chance to inspect hardware that had sat through years of lunar radiation and dust, which helped engineers build tougher spacecraft.",
+l:"It went quiet months after landing. Its camera is now at the National Air and Space Museum and its scoop is on display at JPL."},
+{w:"moon",y:"1969",n:"Laser mirrors",on:1,t:"Still reporting",
+s:"Neil Armstrong and Buzz Aldrin left a small panel of mirrors that needs no electricity at all. Apollo 14 and 15 added larger arrays. Over half a century later, it is the only Apollo experiment still returning data.",
+a:"Corner-cube mirrors that always bounce light straight back to where it came from. Observatories fire laser pulses at the Moon and time the round trip.",
+d:"The Earth–Moon distance can be measured to the millimeter. The data showed the Moon drifting away about 3.8 cm a year, hinted that it has a fluid core, and tested general relativity.",
+l:"Still answering. Observatories such as Apache Point in New Mexico still catch the returning photons, though the old mirrors now return a weaker signal than they once did."},
+{w:"moon",y:"1969",n:"Moon seismometers",t:"Silent",
+s:"Apollo 11’s seismometer lasted about three weeks. Then Apollo 12, 14, 15, 16 and 17 each left a full ALSEP science station. Built to last a year, they ran for up to eight years, listening to the Moon.",
+a:"Seismometers that felt for meteorite strikes and moonquakes and radioed the results to Earth, powered by a small nuclear generator.",
+d:"They recorded more than 1,700 meteoroid impacts. Moonquakes ring for ten minutes or more, far longer than on Earth, and tides in the Moon’s rock trigger quakes every month. The waves revealed layers inside the Moon.",
+l:"On 30 September 1977, NASA permanently shut the stations down because of budget cuts."},
+{w:"moon",y:"1971",n:"Lunar rovers",t:"Silent",
+s:"Apollo 15, 16 and 17 each unfolded an electric car from the side of the lunar module and drove it across the Moon. All three rovers are still parked there.",
+a:"A battery-powered four-wheel-drive car with a top speed around 13 km/h. Eugene Cernan set the Moon speed record of about 18 km/h on Apollo 17.",
+d:"Together the rovers covered about 90 km, so crews could reach very different rocks. From the Apollo 17 rover, Harrison Schmitt spotted orange soil: volcanic glass beads roughly 3.7 billion years old.",
+l:"Left as they were at the end of each mission. The last one was parked in December 1972 in the Taurus–Littrow valley."},
+{w:"moon",y:"1969–72",n:"Landing stages and flags",t:"Silent",
+s:"Every landing left something behind: six descent stages, flags, tools, cameras and even 96 bags of human waste, all dropped to lighten the trip home.",
+a:"The descent stage was the launch pad for the ascent stage that carried the astronauts back to orbit. The flags marked each site.",
+d:"The Lunar Reconnaissance Orbiter photographs the sites from above. Its pictures show tracks, equipment, and the flags of Apollo 12, 16 and 17 still standing and casting shadows. Scientists would love to study how the waste bags have aged.",
+l:"No signals, but they sit there as a record of six landings, watched from orbit."},
+{w:"mars",y:"1976",n:"Viking 1",t:"Silent",
+s:"Viking 1 landed on 20 July 1976, seven years to the day after Apollo 11. Its first landing site looked too rough, so NASA waited for a safer one. It became the first US spacecraft to land successfully on Mars.",
+a:"Cameras, a soil-sampling arm, a weather station and three tiny biology laboratories hunting for signs of life.",
+d:"It sent the first color picture from the Martian surface a day after landing. The biology tests found no clear evidence of life and no organic compounds, yet the puzzling results taught scientists how hard the question is.",
+l:"On 11 November 1982 a faulty command from Earth cut contact with a healthy lander after about six years, a surface record that stood until Opportunity broke it in 2010."},
+{w:"mars",y:"1997",n:"Sojourner",t:"Silent",
+s:"Sojourner was the first rover on Mars, named in a student contest for Sojourner Truth. It rode down inside the Mars Pathfinder lander in 1997. NASA planned for seven Mars days. It worked for 83.",
+a:"A six-wheeled rover of about 11 kg with cameras and a spectrometer that read the chemistry of rocks, sending data through the lander.",
+d:"Pathfinder and Sojourner together suggested Mars was once warm and wet. Just as important, they proved that a roaming robot could work, which led to Spirit and Opportunity.",
+l:"Pathfinder’s last data transmission came on 27 September 1997. NASA formally ended the mission on 10 March 1998."},
+{w:"mars",y:"2004",n:"Spirit",t:"Silent",
+s:"Spirit landed in Gusev crater in January 2004 with a 90-day warranty. It lasted 2,210 Mars days and drove 7.73 km. In 2009 it broke through a crust into soft sand and could not escape.",
+a:"A robot geologist with cameras, a rock-grinding tool and instruments on its arm that analyzed the minerals it touched.",
+d:"Dragging a broken wheel, Spirit churned up nearly pure silica near Home Plate. That forms in hot springs or steam vents, places that could have supported microbes. Its team leader called it one of the most important findings of either rover.",
+l:"Last heard from on 22 March 2010 as its fourth Martian winter began. NASA ended recovery attempts in 2011."},
+{w:"mars",y:"2004",n:"Opportunity",t:"Silent",
+s:"Opportunity was meant to last 90 Mars days and drive 1,000 meters. It worked for 5,111 Mars days and drove 45.16 km, farther than any other vehicle on another world.",
+a:"Spirit’s twin, with cameras, a microscope and spectrometers to read rocks across Meridiani Planum.",
+d:"It found “blueberries,” small spheres of hematite that form in water, plus layered sedimentary rock. Together they showed that liquid water once stood there.",
+l:"Last signal on 10 June 2018 during a planet-wide dust storm. After hundreds of recovery commands, NASA declared the mission complete on 13 February 2019."},
+{w:"mars",y:"2018",n:"InSight",t:"Silent",
+s:"InSight never roamed. It sat on a plain called Elysium Planitia and listened for the first time to the inside of another planet, like a doctor pressing a stethoscope to Mars.",
+a:"A very sensitive seismometer, a weather station and a heat probe called the mole, which could not hammer into the ground as planned.",
+d:"It detected 1,319 marsquakes, some caused by meteoroid impacts. They revealed the crust, mantle and a liquid core roughly half the size of Earth’s core, and InSight gathered very detailed Martian weather data.",
+l:"Last contact on 15 December 2022. After two failed attempts to reach it, NASA declared the mission over on 21 December, with dust covering its solar panels."},
+{w:"mars",y:"2021",n:"Ingenuity",t:"Retired",
+s:"Ingenuity arrived in February 2021 clipped under the Perseverance rover. NASA planned five test flights in a month. On 19 April 2021 it made the first powered, controlled flight on another planet, then kept flying 72 times.",
+a:"A 1.8 kg solar-powered helicopter with a tissue-box-sized body and fast-spinning rotors, built to bite into Mars’ very thin air. It flew on its own, later scouting terrain for the rover.",
+d:"It proved aircraft can fly on another world. It covered about 17 km in roughly 129 minutes of flight, and NASA compared it to the Wright brothers’ first flight. Its legacy lives on in Dragonfly, a rotorcraft planned for Saturn’s moon Titan.",
+l:"Flight 72 on 18 January 2024 damaged a rotor blade. NASA announced the end of the mission on 25 January; Ingenuity remained upright and in communication."}
+];
+const LB={moon:"Moon",mars:"Mars"};
+let f="all",cur=D[0];
+const $=s=>document.querySelector(s);
+const list=()=>D.filter(x=>f=="all"||x.w==f);
+function strip(){
+ $("#strip").innerHTML=list().map(x=>`<button class="stop ${x.w} ${x.on?"live":""}" role="tab" aria-selected="${x==cur}" data-i="${D.indexOf(x)}"><span class="dot"></span><small>${x.y}</small><span class="n">${x.n}</span></button>`).join("");
+}
+function card(){
+ const L=list(),i=L.indexOf(cur);
+ $("#card").innerHTML=`<h2>${cur.n}</h2>
+ <div class="meta"><span>${LB[cur.w]}, ${cur.y}</span><span class="tag ${cur.on?"on":"off"}">${cur.t}</span></div>
+ <p class="story">${cur.s}</p>
+ <div class="cols"><div><h3>What it did</h3><p>${cur.a}</p></div><div><h3>What it discovered</h3><p>${cur.d}</p></div></div>
+ <div class="last"><b>Last signal:</b> ${cur.l}</div>
+ <div class="nav"><button id="pv" ${i<=0?"disabled":""}>Previous</button><button id="nx" ${i>=L.length-1?"disabled":""}>Next</button></div>`;
+ const g=d=>{cur=L[i+d];draw();$("#card").scrollIntoView({block:"nearest"})};
+ $("#nx").onclick=()=>g(1);$("#pv").onclick=()=>g(-1);
+}
+function draw(){strip();card()}
+$("#strip").onclick=e=>{const b=e.target.closest(".stop");if(b){cur=D[+b.dataset.i];draw()}};
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+ f=c.dataset.f;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x==c));
+ if(!list().includes(cur))cur=list()[0];draw()});
+draw();
+const Q=[
+{q:"Which Apollo experiment is still returning data from the Moon?",o:["The seismometers","The laser mirrors","The lunar rovers"],a:1},
+{q:"How long was Opportunity’s original mission?",o:["5 years","1 year","90 Mars days"],a:2},
+{q:"What did InSight listen to?",o:["Marsquakes","Martian rivers","Radio from Earth"],a:0},
+{q:"How many flights did Ingenuity make?",o:["5","72","14"],a:1},
+{q:"Why did NASA shut down the Apollo moon stations in 1977?",o:["They were destroyed","Budget cuts","Aliens"],a:1}];
+let sc=0,dn=0;
+$("#quiz").innerHTML=Q.map((x,i)=>`<div class="qb"><div>${x.q}</div><div class="opts">${x.o.map((t,j)=>`<button data-q="${i}" data-j="${j}">${t}</button>`).join("")}</div></div>`).join("");
+$("#quiz").onclick=e=>{const b=e.target.closest("button");if(!b||b.parentNode.dataset.d)return;
+ const i=+b.dataset.q,j=+b.dataset.j;b.parentNode.dataset.d=1;dn++;
+ if(j==Q[i].a){sc++;b.classList.add("ok")}else{b.classList.add("no");b.parentNode.children[Q[i].a].classList.add("ok")}
+ if(dn==Q.length)$("#score").textContent=`You scored ${sc} out of ${Q.length}`+(sc==Q.length?". You are a true space explorer!":". Try the stories again.")};
+</script>
+</body>
+</html>
