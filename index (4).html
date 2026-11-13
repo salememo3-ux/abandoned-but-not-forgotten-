@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abandoned but Not Forgotten</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf3ff;--ink:#1a2547;--mute:#46537d;--card:#fff;--line:#c4d3f0;--acc:#3466c9;--acc-s:#dce7fb;--planet:#b9bcc6;--crater:#9ea2b0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-world=mars]{--acc:#c2511f;--acc-s:#fbe2d4;--planet:#d9703f;--crater:#b95a2e}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]){--bg:#0e1636;--ink:#f3efe6;--mute:#b4bddb;--card:#1a2756;--line:#2f4080;--acc:#ffd166;--acc-s:#2b3a75}
+:root:not([data-theme="light"])[data-world=mars]{--acc:#ff9a6b;--acc-s:#4a2e3d}}
+:root[data-theme="dark"]{--bg:#0e1636;--ink:#f3efe6;--mute:#b4bddb;--card:#1a2756;--line:#2f4080;--acc:#ffd166;--acc-s:#2b3a75}
+:root[data-theme="dark"][data-world=mars]{--acc:#ff9a6b;--acc-s:#4a2e3d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.7 Fredoka,Cairo,"Segoe UI",Tahoma,sans-serif;transition:background .5s}
+main{max-width:44rem;margin:0 auto;padding:1.5rem 1.1rem 7rem}
+h1{font-size:clamp(2.2rem,9vw,3.6rem);line-height:1.1;margin:.2rem 0;font-weight:600}
+h3{margin:0;font-size:1.4rem;font-weight:600}
+.sub{color:var(--mute);margin:.4rem 0 1rem}
+.hero{position:relative;overflow:hidden;border-radius:1.2rem;background:linear-gradient(#0b1230,#1c2c6b);height:210px;margin-bottom:1rem}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.star{animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2}}
+.planet{fill:var(--planet);transition:fill .5s}
+.cr{fill:var(--crater);transition:fill .5s}
+.ship{animation:fly 9s linear infinite}
+@keyframes fly{from{transform:translate(-80px,30px) rotate(8deg)}50%{transform:translate(380px,10px) rotate(-6deg)}to{transform:translate(860px,40px) rotate(8deg)}}
+.bob{animation:bob 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.rot{animation:rot .25s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes rot{50%{transform:scaleX(.15)}}
+.tabs{display:flex;gap:.6rem;margin:1rem 0}
+.tabs button{flex:1;font:inherit;font-weight:500;padding:.8rem;border:3px solid var(--line);background:var(--card);color:var(--ink);border-radius:1rem;cursor:pointer}
+.tabs button[aria-selected=true]{border-color:var(--acc);background:var(--acc-s)}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+#intro{margin:0 0 1.2rem;color:var(--mute)}
+ol{list-style:none;margin:0;padding:0}
+li{margin-bottom:.8rem}
+details{background:var(--card);border:2px solid var(--line);border-radius:1rem}
+details[open]{border-color:var(--acc)}
+summary{display:flex;gap:.9rem;align-items:center;cursor:pointer;padding:.7rem .9rem;list-style:none}
+summary::-webkit-details-marker{display:none}
+.ic{flex:none;width:64px;height:64px}
+.yr{color:var(--acc);font-weight:500;font-size:.95rem}
+.tag{color:var(--mute);font-size:.95rem}
+.st{display:inline-block;margin-top:.2rem;padding:0 .7rem;border-radius:1rem;background:var(--acc-s);font-size:.85rem}
+.body{padding:0 1rem 1rem}
+.body p{margin:.6rem 0}
+.body b{color:var(--acc);font-weight:600}
+.body .say{font-size:1.15rem}
+details[open] .body{animation:pop .35s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(-6px)}}
+section.q{margin-top:2.2rem;padding:1.2rem;background:var(--card);border:2px solid var(--line);border-radius:1.2rem}
+.q h2{margin:0 0 .6rem;font-size:1.6rem}
+.opts{display:grid;gap:.5rem}
+.opts button{font:inherit;text-align:start;padding:.7rem 1rem;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:.8rem;cursor:pointer}
+.opts button.ok{border-color:var(--acc);background:var(--acc-s)}
+.opts button.no{opacity:.5}
+.fb{min-height:1.6rem;color:var(--mute)}
+.next{font:inherit;padding:.5rem 1.4rem;border:0;border-radius:2rem;background:var(--acc);color:var(--bg);cursor:pointer}
+.end{margin-top:2rem;text-align:center;font-size:1.25rem}
+footer{margin-top:1.5rem;color:var(--mute);font-size:.9rem}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:.6rem;background:var(--card);border:2px solid var(--line);border-radius:2rem;padding:.3rem .9rem;margin:.6rem 0 1rem;font-weight:500}
+.bar{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .4s}
+.snd{font:inherit;font-size:.9rem;border:0;background:var(--acc-s);color:var(--ink);border-radius:1rem;padding:.2rem .8rem;cursor:pointer}
+.act{margin-top:.6rem}
+.map{position:relative;width:min(100%,320px);aspect-ratio:1;margin:0 auto 1.2rem;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--planet),var(--crater))}
+.map button{position:absolute;transform:translate(-50%,-50%);font:inherit;font-size:.78rem;background:var(--card);color:var(--ink);border:2px solid var(--acc);border-radius:1rem;padding:0 .5rem;cursor:pointer;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;max-width:300px;margin:.8rem auto}
+.hole{position:relative;aspect-ratio:1;border-radius:50%;background:var(--bg);border:2px solid var(--line)}
+.rock{position:absolute;inset:14%;border:0;border-radius:40% 55% 45% 50%;background:var(--acc);box-shadow:inset -5px -5px 0 rgba(0,0,0,.25);cursor:pointer}
+.mascot{position:fixed;inset-inline-end:.8rem;bottom:0;padding-bottom:calc(.8rem + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:.5rem;z-index:9;max-width:80vw;pointer-events:none}
+.bub{background:var(--card);border:2px solid var(--acc);border-radius:1rem;padding:.4rem .8rem;font-size:.95rem}
+dialog{background:var(--card);color:var(--ink);border:4px solid var(--acc);border-radius:1.2rem;max-width:30rem;text-align:center;font:inherit}
+dialog h2{margin:.2rem 0}
+.nm{font-size:2rem;font-weight:600;color:var(--acc);margin:.3rem 0}
+dialog input{font:inherit;padding:.4rem .8rem;border:2px solid var(--line);border-radius:.6rem;background:var(--bg);color:var(--ink)}
+a{color:var(--acc)}
+input[type=number]{font:inherit;width:6rem;padding:.4rem .8rem;border:2px solid var(--line);border-radius:.6rem;background:var(--bg);color:var(--ink)}
+.mem{grid-template-columns:repeat(4,1fr);max-width:360px}
+.mc{aspect-ratio:1;padding:.3rem;border:2px solid var(--line);border-radius:.8rem;background:var(--acc-s);cursor:pointer}
+.mc svg{visibility:hidden;width:100%;height:100%}
+.mc.up svg,.mc.ok svg{visibility:visible}
+.mc.up{background:var(--card)}
+.mc.ok{background:var(--card);border-color:var(--acc)}
+.mc:not(.up):not(.ok)::after{content:"?";font-size:1.7rem;color:var(--acc)}
+.tl{display:flex;overflow-x:auto;padding:.4rem 0 .6rem}
+.tn{flex:none;min-width:5.6rem;background:none;border:0;color:var(--ink);font:inherit;font-size:.85rem;cursor:pointer;position:relative;padding-top:1.3rem;text-align:center;animation:tn .5s backwards}
+.tn::before{content:"";position:absolute;top:.45rem;inset-inline:0;height:3px;background:var(--line)}
+.tn i{position:absolute;top:0;left:50%;transform:translateX(-50%);width:.95rem;height:.95rem;border-radius:50%;z-index:1}
+.tn.moon i{background:#8d98bf}.tn.mars i{background:#d9703f}
+.tn b{display:block;color:var(--acc)}
+@keyframes tn{from{opacity:0}}
+.fl{position:relative;height:200px;overflow:hidden;border-radius:1rem;border:2px solid var(--line);background:linear-gradient(var(--acc-s),var(--bg));touch-action:none;margin:.8rem 0}
+.fl svg{position:absolute;left:12%;top:0;width:48px;height:48px}
+.dust{position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--crater);opacity:.85}
+#fu{touch-action:none;user-select:none}
+figure{margin:.4rem 0 .8rem}
+figure img{width:100%;border-radius:.8rem;display:block}
+figcaption{font-size:.85rem;color:var(--mute);margin-top:.3rem}
+@media print{main,.mascot,.np{display:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="hero" aria-hidden="true">
+<svg id="sky" viewBox="0 0 700 210" preserveAspectRatio="xMidYMid slice">
+<circle class="planet" cx="560" cy="250" r="150"/>
+<circle class="cr" cx="500" cy="130" r="14"/><circle class="cr" cx="590" cy="115" r="9"/><circle class="cr" cx="640" cy="150" r="16"/>
+<g class="ship"><ellipse cx="0" cy="0" rx="26" ry="10" fill="#e8e4da"/><circle cx="0" cy="-8" r="9" fill="#7fd0ff"/><path d="M-26 2 L-40 8 M26 2 L40 8" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/></g>
+</svg>
+</div>
+<h1>Abandoned but Not Forgotten</h1>
+<p class="sub">The robots and tools NASA left on the Moon and Mars, telling their own stories.</p>
+<div class="tabs" role="tablist" aria-label="Choose a world">
+<button role="tab" aria-selected="true" data-w="moon">Visit the Moon</button>
+<button role="tab" aria-selected="false" data-w="mars">Visit Mars</button>
+</div>
+<div class="prog" role="status"><span>Stars: <span id="sc">0</span>/10</span><span class="bar"><i id="bar"></i></span><button class="snd" id="sb">Sound: on</button><button class="snd" id="lg">العربية</button></div>
+<button class="next" id="cb" hidden>Get my certificate</button>
+<p id="intro"></p>
+<div class="map" id="map"></div>
+<p style="text-align:center"><button class="snd" id="sp">Surprise me with a fun fact</button></p>
+<ol id="list"></ol>
+<section class="q"><h2>Space timeline</h2>
+<p>Tap a dot to jump to that machine.</p>
+<div class="tl" id="tl"></div></section>
+<section class="q">
+<h2>Game: Sample Hunt</h2>
+<p>Tap the shiny rocks before they hide. You have 20 seconds!</p>
+<div class="grid" id="gr"></div>
+<p class="fb" id="gs"></p>
+<button class="next" id="gb">Start game</button>
+</section>
+
+<section class="q"><h2>Game: Help Ingenuity Fly</h2>
+<p>Hold the button or press the space bar to rise. Let go to sink. Dodge the dust clouds for 20 seconds!</p>
+<div class="fl" id="fl"><svg id="fh" viewBox="0 0 64 64" aria-hidden="true"></svg></div>
+<p class="act"><button class="snd" id="fu">Hold to rise</button> <button class="next" id="fb">Start flying</button></p>
+<p class="fb" id="fs"></p></section>
+<section class="q"><h2>Weigh yourself in space</h2>
+<p>Type your weight in kg: <input id="wk" type="number" min="1" max="200" value="30" inputmode="numeric"></p>
+<p id="wr"></p>
+<p>A day on Mars lasts about 24 hours and 37 minutes. A year on Mars lasts about 687 Earth days.</p></section>
+<section class="q"><h2>How long is the trip?</h2>
+<p>Pick a vehicle and see how long it would take to reach each world.</p>
+<div class="act"><button class="snd" data-v="100">Car</button> <button class="snd" data-v="900">Jet plane</button> <button class="snd" data-v="5300">Apollo rocket</button></div>
+<p id="tr"></p></section>
+<section class="q"><h2>Game: Memory Match</h2>
+<p>Flip two cards at a time and find the matching machines.</p>
+<div class="grid mem" id="mg"></div>
+<p class="fb" id="ms"></p>
+<button class="next" id="mb">Shuffle cards</button></section>
+<section class="q"><h2>Teacher corner</h2>
+<details><summary>Discussion questions and a class activity</summary><div class="body">
+<p>1. Why might NASA leave some machines behind instead of bringing them home?</p>
+<p>2. Which machine surprised you most, and why?</p>
+<p>3. How can a machine that stopped working still help scientists?</p>
+<p>Activity: in teams, design a robot for a new world. Draw it, name it, and explain what it will discover.</p></div></details></section>
+<section class="q"><h2>Learn more</h2>
+<p>Check the facts on these official NASA pages: <a href="https://www.nasa.gov">NASA</a>, <a href="https://science.nasa.gov/moon/">Moon science</a>, <a href="https://science.nasa.gov/mars/">Mars science</a>, <a href="https://nssdc.gsfc.nasa.gov">NASA Space Science Data Archive</a>.</p></section>
+<section class="q" aria-live="polite">
+<h2>Quiz time!</h2>
+<p id="qt"></p>
+<div class="opts" id="qo"></div>
+<p class="fb" id="qf"></p>
+<button class="next" id="qn" hidden>Next question</button>
+</section>
+<p class="end">They may be quiet now, but what they taught us will never be forgotten.</p>
+<footer>Based on NASA's public mission information. A learning prototype for NASA Space Apps Challenge Cairo.</footer>
+</main>
+<div class="mascot" aria-live="polite"><div class="bub" id="bub">Hi! I am Astro. Tap a spot on the map!</div>
+<svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><g class="bob"><line x1="32" y1="5" x2="32" y2="14" stroke="var(--ink)" stroke-width="3"/><circle cx="32" cy="5" r="4" fill="var(--acc)"/><rect x="10" y="14" width="44" height="38" rx="12" fill="var(--acc)"/><circle cx="23" cy="30" r="6" fill="#fff"/><circle cx="41" cy="30" r="6" fill="#fff"/><circle cx="24" cy="31" r="3" fill="#14213a"/><circle cx="42" cy="31" r="3" fill="#14213a"/><rect x="24" y="42" width="16" height="4" rx="2" fill="#14213a"/></g></svg></div>
+<dialog id="cert"><h2>Space Explorer Certificate</h2><p>Awarded to</p><p class="nm" id="cn">Explorer</p><p>for meeting all 10 machines that were abandoned but never forgotten.</p>
+<p class="np"><input id="nm" placeholder="Type your name" maxlength="30"> <button class="next" id="cp">Print</button> <button class="snd" id="cx">Close</button></p></dialog>
+<script>
+let lang="en";const L=()=>lang==="ar",t=k=>L()&&AR[k]||k;
+const AR={
+"Abandoned but Not Forgotten":"مهجورة لكن غير منسية",
+"The robots and tools NASA left on the Moon and Mars, telling their own stories.":"الروبوتات والأدوات التي تركتها ناسا على القمر والمريخ، تحكي قصصها بنفسها.",
+"Visit the Moon":"زُر القمر","Visit Mars":"زُر المريخ","Stars:":"النجوم:","Get my certificate":"احصل على شهادتي",
+"Surprise me with a fun fact":"فاجئني بمعلومة ممتعة","Space timeline":"الخط الزمني للفضاء","Tap a dot to jump to that machine.":"اضغط على نقطة لتنتقل إلى الجهاز.",
+"Game: Sample Hunt":"لعبة: صيد العينات","Tap the shiny rocks before they hide. You have 20 seconds!":"اضغط على الصخور اللامعة قبل أن تختفي. معك 20 ثانية!",
+"Game: Help Ingenuity Fly":"لعبة: ساعد إنجينيويتي على الطيران","Hold the button or press the space bar to rise. Let go to sink. Dodge the dust clouds for 20 seconds!":"اضغط مطولاً على الزر أو على مفتاح المسافة لتصعد، وأفلت لتهبط. تجنب سحب الغبار لمدة 20 ثانية!",
+"Hold to rise":"اضغط مطولاً للصعود","Weigh yourself in space":"زن نفسك في الفضاء","Type your weight in kg:":"اكتب وزنك بالكيلوجرام:",
+"A day on Mars lasts about 24 hours and 37 minutes. A year on Mars lasts about 687 Earth days.":"اليوم على المريخ يستمر نحو 24 ساعة و37 دقيقة، والسنة فيه نحو 687 يومًا أرضيًا.",
+"How long is the trip?":"كم تستغرق الرحلة؟","Pick a vehicle and see how long it would take to reach each world.":"اختر مركبة وانظر كم تستغرق للوصول إلى كل عالم.",
+"Car":"سيارة","Jet plane":"طائرة نفاثة","Apollo rocket":"صاروخ أبولو","Game: Memory Match":"لعبة: مطابقة الذاكرة",
+"Flip two cards at a time and find the matching machines.":"اقلب بطاقتين في كل مرة وابحث عن الأجهزة المتشابهة.","Shuffle cards":"اخلط البطاقات",
+"Teacher corner":"ركن المعلم","Discussion questions and a class activity":"أسئلة للنقاش ونشاط للفصل",
+"1. Why might NASA leave some machines behind instead of bringing them home?":"1. لماذا قد تترك ناسا بعض الأجهزة بدل إعادتها إلى الأرض؟",
+"2. Which machine surprised you most, and why?":"2. أي جهاز أدهشك أكثر، ولماذا؟",
+"3. How can a machine that stopped working still help scientists?":"3. كيف يمكن لجهاز توقف عن العمل أن يساعد العلماء؟",
+"Activity: in teams, design a robot for a new world. Draw it, name it, and explain what it will discover.":"نشاط: في مجموعات، صمموا روبوتًا لعالم جديد. ارسموه وسمّوه واشرحوا ماذا سيكتشف.",
+"Learn more":"اعرف المزيد","Check the facts on these official NASA pages:":"تحقق من المعلومات في صفحات ناسا الرسمية:",
+"NASA":"ناسا","Moon science":"علوم القمر","Mars science":"علوم المريخ","NASA Space Science Data Archive":"أرشيف بيانات علوم الفضاء لدى ناسا",
+"Quiz time!":"وقت الاختبار!","They may be quiet now, but what they taught us will never be forgotten.":"ربما صارت صامتة الآن، لكن ما علّمتنا إياه لن يُنسى أبدًا.",
+"Based on NASA's public mission information. A learning prototype for NASA Space Apps Challenge Cairo.":"مبني على معلومات ناسا العامة عن مهماتها. نموذج تعليمي لمسابقة ناسا سبيس آبس القاهرة.",
+"Space Explorer Certificate":"شهادة مستكشف الفضاء","Awarded to":"تُمنح إلى","for meeting all 10 machines that were abandoned but never forgotten.":"لتعرّفه على الأجهزة العشرة التي تُركت لكنها لم تُنسَ.",
+"Print":"طباعة","Close":"إغلاق","Type your name":"اكتب اسمك",
+"Sound: on":"الصوت: يعمل","Sound: off":"الصوت: متوقف","Start game":"ابدأ اللعبة","Start flying":"ابدأ الطيران","Play again":"العب مرة أخرى","Fly again":"حلّق مرة أخرى",
+"Next question":"السؤال التالي","Yes!":"صحيح!","Not quite.":"ليس تمامًا.","New star!":"نجمة جديدة!"," of 10":" من 10",
+"All 10 stars! You earned a certificate!":"حصلت على النجوم العشر! نلت شهادة!","Welcome to the Moon! Tap a spot on the map.":"أهلًا بك على القمر! اضغط على مكان في الخريطة.",
+"Welcome to Mars! Tap a spot on the map.":"أهلًا بك على المريخ! اضغط على مكان في الخريطة.","Quick, collect the rocks!":"أسرع، اجمع الصخور!",
+"Wow, a space champion!":"رائع، بطل فضاء!","Nice job! Play again to beat your score.":"أحسنت! العب مرة أخرى لتتفوق على نتيجتك.","Great answer!":"إجابة رائعة!","Good try!":"محاولة جيدة!",
+"Space is really, really big!":"الفضاء كبير جدًا جدًا!","Memory champion!":"بطل الذاكرة!","Great flying, pilot!":"طيران رائع أيها الطيار!","Oops! Try again.":"آخ! حاول مرة أخرى.",
+"You flew for 20 seconds!":"حلّقت 20 ثانية كاملة!","Crash! Try again.":"اصطدمت! حاول مرة أخرى.","Listen to my story":"استمع إلى قصتي","What I found:":"ماذا اكتشفت:","Fun fact:":"معلومة ممتعة:",
+"Think:":"فكّر:","Show an idea":"أظهر فكرة","See real NASA photos":"شاهد صور ناسا الحقيقية"};
+const INT={moon:"منذ زمن بعيد زار رواد وروبوتات القمر. وحين غادروا بقيت بعض أدواتهم هناك. اضغط على بطاقة لتسمع قصة كل جهاز.",mars:"المريخ بعيد، لذلك تذهب الروبوتات أولًا. وحين تنفد بطارياتها تبقى في مكانها، وكثير منها عمل أطول بكثير مما خُطط له!"};
+const AI={
+"Surveyor 3":{n:"سيرفيور 3",t:"الروبوت الصغير الذي زاره البشر",s:"صامت",say:"مرحبًا! أنا سيرفيور 3. هبطت على القمر بلا رواد، ومعي كاميرا ومغرفة أحفر بها الغبار.",d:"أثبتّ أن أرض القمر قوية بما يكفي للهبوط عليها. وبعد سنتين ونصف هبط رواد أبولو 12 قربي وأخذوا كاميرتي إلى الأرض ليدرسوا كيف يغيّر الفضاء المعادن.",fun:"كانت أول مرة يلتقي فيها البشر بروبوت سبقهم إلى عالم آخر.",q:"لو هبطت على القمر، كيف تختبر أن الأرض آمنة؟",a:"تغرف بعض الغبار وتضغط عليه، كما فعل سيرفيور 3."},
+"The Laser Mirror":{n:"مرآة الليزر",t:"ما زالت تعمل حتى اليوم",s:"ما زالت تُستخدم",say:"أنا قطعة من مرايا صغيرة. يوجّه العلماء على الأرض شعاع ليزر نحوي فأعيده إليهم مباشرة، ولا أحتاج كهرباء!",d:"بقياس زمن عودة الضوء يعرف العلماء المسافة إلى القمر بدقة كبيرة، وهكذا عرفنا أن القمر يبتعد عنا نحو 3.8 سم كل سنة.",fun:"تركت بعثات أبولو 11 و14 و15 مرايا مثلي، ونحن الأجهزة التي لم تتقاعد أبدًا.",q:"لماذا قد تعيش مرآة أطول من آلة تعمل بالبطارية؟",a:"لأنها بلا أجزاء تنفد أو تتعطل، فتنتظر بهدوء."},
+"ALSEP Science Station":{n:"محطة ألساب العلمية",t:"جهاز يستمع إلى هزات القمر",s:"أُغلقت عام 1977",say:"أنا محطة علمية كاملة! نصبني الرواد ومعي أجهزة تحس بالهزات ومولد نووي صغير يمدني بالطاقة.",d:"سجلت آلاف الزلازل القمرية، وأظهرت أن للقمر قشرة وغلافًا ونواة صغيرة، مثل أرض صغيرة.",fun:"في 30 سبتمبر 1977 أرسلت لي ناسا أمر الإغلاق الأخير. تصبحون على خير!",q:"ماذا ستسمع لو كنت تستمع إلى هزات القمر؟",a:"هزات صغيرة من أعماقه، كأنها خطوات من داخل القمر."},
+"Moon Buggy (LRV)":{n:"عربة القمر",t:"سيارة تعمل بالبطارية على القمر",s:"متوقفة إلى الأبد",say:"بيب بيب! أنا عربة القمر. كنت مطوية لأتسع في المركبة، ثم قادني رواد أبولو 15 و16 و17.",d:"بي ابتعد رواد أبولو 17 كثيرًا عن مركبتهم ووجدوا تربة برتقالية، وتبين أنها حبيبات زجاج بركاني عمرها نحو 3.6 مليار سنة.",fun:"سرعتي القصوى نحو 13 كم في الساعة، وما زلت متوقفة على القمر.",q:"إلى أين تقود عربة القمر أولًا؟",a:"ربما إلى حافة فوهة، حيث تحكي الصخور الجديدة قصصًا قديمة."},
+"Far Ultraviolet Camera":{n:"كاميرا الأشعة فوق البنفسجية",t:"أول تلسكوب على القمر",s:"صامتة",say:"أنا كاميرا خاصة صممها العالم جورج كارذرز. نصبني الرائد جون يونج في ظل المركبة موجهة نحو السماء.",d:"من القمر رأيت أشعة لا يحجبها هواء الأرض، وصورت سحابة الهيدروجين المتوهجة حول كوكبنا ونجومًا بعيدة.",fun:"عاد الفيلم مع الرواد إلى الأرض، أما أنا فبقيت على القمر.",q:"إلى أين توجه تلسكوبًا من القمر؟",a:"إلى وهج الأرض والنجوم اللامعة والمجرات البعيدة."},
+"Viking 1":{n:"فايكنج 1",t:"أول مركبة تعمل طويلًا على المريخ",s:"صامتة منذ 1982",say:"أنا فايكنج 1. هبطت في سهل اسمه كريسي وأخذت أول صور ملونة من سطح المريخ.",d:"اختبرت التربة بحثًا عن علامات حياة. لم نجد دليلًا واضحًا، لكنني أعطيت العلماء أول نظرة قريبة على طقس المريخ وأرضه.",fun:"واصلت العمل نحو ست سنوات حتى نوفمبر 1982.",q:"ما الأسئلة التي ستسألها لتربة المريخ؟",a:"هل فيها ماء؟ هل فيها حياة؟ مم تتكون؟"},
+"Sojourner":{n:"سوجورنر",t:"أول مركبة جوّالة على المريخ",s:"صامت",say:"أنا سوجورنر، بحجم فرن ميكروويف. نزلت على منحدر من مركبة باثفايندر وفحصت الصخور بجهاز خاص.",d:"أثبتّ أن مركبة جوالة تستطيع السير على المريخ بنفسها، وأنها لا تحتاج أن تكون ضخمة لتقوم بعلم حقيقي.",fun:"كان مخططًا أن أعمل 7 أيام، فعملت 83 يومًا مريخيًا!",q:"كيف تساعد مركبة صغيرة مركبة هبوط كبيرة؟",a:"تصل إلى صخور بعيدة لا تستطيع مركبة الهبوط الوصول إليها."},
+"Opportunity":{n:"أبورتيونيتي",t:"الروبوت الذي لم يتوقف",s:"صامتة منذ 2018",say:"أنا أبورتيونيتي. تمنى فريقي أن أعيش ثلاثة أشهر، لكنني استكشفت المريخ قرابة 14 سنة!",d:"وجدت صخورًا صغيرة مستديرة غنية بمعدن الهيماتيت، وهي دليل على أن الماء السائل كان يبلّل هذه الأرض. وقطعت أكثر من 45 كم.",fun:"في 2018 حجبت عاصفة غبار هائلة الشمس فنمت للأبد. وأنهت ناسا مهمتي في فبراير 2019.",q:"كيف تُبقي مركبة جوالة تعمل سنوات طويلة؟",a:"تنظف ألواحها الشمسية وتتركها ترتاح في الشتاء وعواصف الغبار."},
+"InSight":{n:"إنسايت",t:"طبيب المريخ",s:"صامتة منذ 2022",say:"أنا إنسايت. أبقى في مكاني وأضع على الأرض جهاز زلازل شديد الحساسية لأسمع نبض المريخ.",d:"أحسست بأكثر من 1300 زلزال مريخي، وأظهرت موجاتها أن للمريخ نواة سائلة نصف قطرها نحو 1830 كم.",fun:"غطّى الغبار ألواحي الشمسية شيئًا فشيئًا حتى نفدت طاقتي في ديسمبر 2022.",q:"لماذا نستمع إلى الأرض بدل أن نكتفي بالتصوير؟",a:"لأن الهزات تعبر داخل الكوكب وتُرينا ما لا نراه."},
+"Ingenuity":{n:"إنجينيويتي",t:"أول مروحية تطير في عالم آخر",s:"استراحت منذ 2024",say:"أنا إنجينيويتي، مروحية صغيرة. هواء المريخ رقيق جدًا، لذا تدور ريشاتي بسرعة هائلة لترفعني.",d:"أثبتّ أن الطيران المتحكم به ممكن على كوكب آخر، والآن تفكر ناسا في آلات طائرة تستكشف المريخ من الجو.",fun:"كان مقررًا أن أطير 5 مرات، فطرت 72! وأرتاح الآن في فوهة جيزيرو.",q:"ماذا تستكشف مروحية المريخ للمستكشفين؟",a:"طرقًا آمنة وصخورًا مثيرة ومنحدرات، كل ذلك من الأعلى."}};
+const QA=[
+{q:"كيف يعرف العلماء أن القمر يبتعد عنا؟",o:["يوجهون الليزر إلى مرايا تركها رواد أبولو","يقيسون ظل القمر","يسألون الرواد"],a:0,e:"يرتد الليزر، وزمن الرحلة يكشف المسافة."},
+{q:"ماذا اكتشفت إنسايت عن المريخ؟",o:["أن فيه محيطًا ضخمًا اليوم","أن له نواة سائلة","أن هواءه كثيف مثل الأرض"],a:1,e:"موجات زلازل المريخ كشفت النواة."},
+{q:"كم رحلة خُطط لإنجينيويتي؟",o:["72","20","5"],a:2,e:"خُططت 5 رحلات تجريبية فقط، وطارت 72!"}];
+const NQ={"Surveyor 3":"Surveyor 3","The Laser Mirror":"lunar laser ranging retroreflector","ALSEP Science Station":"ALSEP","Moon Buggy (LRV)":"lunar roving vehicle","Far Ultraviolet Camera":"far ultraviolet camera Apollo 16","Viking 1":"Viking 1 lander","Sojourner":"Sojourner rover","Opportunity":"Opportunity rover","InSight":"InSight lander","Ingenuity":"Ingenuity helicopter"};
+const IMG={
+"Opportunity":["pia05","PIA05588","Opportunity's view of the “blueberries”, round grains rich in hematite, in 2004. Credit: NASA/JPL/Cornell.","ما رصدته أبورتيونيتي من «التوت الأزرق»، وهي كرات غنية بالهيماتيت، عام 2004. المصدر: NASA/JPL/Cornell."],
+"InSight":["pia25","PIA25287","InSight's final selfie on April 24, 2022, covered in dust. Credit: NASA/JPL-Caltech.","آخر صورة ذاتية لإنسايت في 24 أبريل 2022 وهي مغطاة بالغبار. المصدر: NASA/JPL-Caltech."],
+"Ingenuity":["pia25","PIA25213","Ingenuity at “Airfield D”, photographed by the Perseverance rover in June 2021. Credit: NASA/JPL-Caltech.","إنجينيويتي في «المطار د» كما صورتها المركبة برسيفيرانس في يونيو 2021. المصدر: NASA/JPL-Caltech."]};
+function im(n){const m=IMG[n];if(!m)return"";const id=m[1];return `<figure><img loading="lazy" alt="" src="https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/${m[0]}/${id.toLowerCase()}/${id}.jpg?w=900" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://photojournal.jpl.nasa.gov/jpeg/${id}.jpg'}else this.closest('figure').remove()"><figcaption>${L()?m[3]:m[2]}</figcaption></figure>`}
+const IC={
+lander:'<rect x="18" y="16" width="28" height="22" rx="7" fill="var(--acc)"/><path d="M20 38 L9 54 M44 38 L55 54 M32 38 V54" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="27" r="5" fill="var(--bg)"/>',
+mirror:'<rect x="14" y="14" width="36" height="36" rx="5" fill="var(--acc)"/><path d="M14 32h36M32 14v36" stroke="var(--bg)" stroke-width="2"/>',
+wave:'<path d="M3 32 L16 32 L22 10 L30 54 L38 18 L44 32 L61 32" fill="none" stroke="var(--acc)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>',
+rover:'<g class="bob"><rect x="10" y="22" width="44" height="14" rx="6" fill="var(--acc)"/><path d="M40 22 L48 8" stroke="var(--ink)" stroke-width="3"/></g><circle cx="19" cy="45" r="7" fill="var(--ink)"/><circle cx="45" cy="45" r="7" fill="var(--ink)"/>',
+camera:'<rect x="8" y="20" width="48" height="32" rx="7" fill="var(--acc)"/><circle cx="32" cy="36" r="11" fill="var(--bg)"/><circle cx="32" cy="36" r="5" fill="var(--ink)"/>',
+copter:'<rect class="rot" x="2" y="10" width="60" height="5" rx="2" fill="var(--ink)"/><rect x="21" y="17" width="22" height="17" rx="6" fill="var(--acc)"/><path d="M26 34 L21 52 M38 34 L43 52" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>'};
+const W={
+moon:{intro:"Long ago, astronauts and robots visited the Moon. When they left, some of their tools stayed behind. Tap a card to hear each machine's story.",
+items:[
+{i:"lander",y:"1967",n:"Surveyor 3",t:"The little robot that got a visit",s:"Quiet",
+say:"Hi! I'm Surveyor 3. I landed on the Moon with no astronauts, just a camera and a scoop to dig the dust.",
+d:"I proved the Moon's ground was strong enough to land on. Two and a half years later, Apollo 12 astronauts landed close to me and took my camera home to study how space changes metal.",
+fun:"It was the first time humans met a robot that had travelled to another world before them."},
+{i:"mirror",y:"1969",n:"The Laser Mirror",t:"Still working today",s:"Still in use",
+say:"I'm a patch of tiny mirrors. Scientists on Earth shine a laser at me, and I bounce it straight back. I don't even need electricity!",
+d:"By timing how long the light takes to come back, scientists measure the distance to the Moon very accurately. That's how we learned the Moon moves away from us about 3.8 cm every year.",
+fun:"Apollo 11, 14 and 15 left mirrors like me. We're the machines that never really retired."},
+{i:"wave",y:"1969 to 1977",n:"ALSEP Science Station",t:"A moon-shake listener",s:"Switched off 1977",
+say:"I'm a whole science station! Astronauts set me up with seismometers that feel shakes, and a tiny nuclear power pack to keep me going.",
+d:"I recorded thousands of moonquakes. They showed that the Moon has a crust, a mantle, and a small core, just like a tiny Earth.",
+fun:"On September 30, 1977, NASA sent me the last command to turn off. Goodnight!"},
+{i:"rover",y:"1971 to 1972",n:"Moon Buggy (LRV)",t:"A battery-powered car on the Moon",s:"Parked forever",
+say:"Beep beep! I'm the Lunar Roving Vehicle. I folded up flat to fit in the lander, then Apollo 15, 16 and 17 astronauts drove me around.",
+d:"With me, Apollo 17 astronauts travelled far from their lander and found orange soil. It turned out to be tiny glass beads from volcanoes about 3.6 billion years old.",
+fun:"My top speed was around 13 km per hour, and I have no keys. I'm still parked on the Moon."},
+{i:"camera",y:"1972",n:"Far Ultraviolet Camera",t:"The first telescope on the Moon",s:"Quiet",
+say:"I'm a special camera built by scientist George Carruthers. Astronaut John Young set me up in the shadow of the lander, pointing at the sky.",
+d:"From the Moon I could see ultraviolet light that Earth's air blocks. I photographed the glowing hydrogen cloud around our planet and faraway stars.",
+fun:"My film came home with the astronauts, but I stayed on the Moon."}]},
+mars:{intro:"Mars is far away, so robots go first. When their batteries run out they stay where they are. Many worked far longer than planned!",
+items:[
+{i:"lander",y:"1976",n:"Viking 1",t:"The first long-lasting Mars lander",s:"Quiet since 1982",
+say:"I'm Viking 1. I landed on a plain called Chryse Planitia and took the first color photos from the surface of Mars.",
+d:"I tested the soil for signs of life. We didn't find clear proof, but I gave scientists their first close look at Mars' weather and ground.",
+fun:"I kept working for about six years, until November 1982."},
+{i:"rover",y:"1997",n:"Sojourner",t:"The first Mars rover",s:"Quiet",
+say:"I'm Sojourner, as small as a microwave oven. I rolled down a ramp from the Pathfinder lander and sniffed rocks with a special instrument.",
+d:"I showed that a rover can drive on Mars on its own, and that it doesn't have to be huge to do real science.",
+fun:"I was planned to work for 7 days. I worked for 83 Martian days!"},
+{i:"rover",y:"2004 to 2018",n:"Opportunity",t:"The robot that kept going and going",s:"Quiet since 2018",
+say:"I'm Opportunity. My team hoped I'd last three months. Instead, I explored Mars for almost 14 years!",
+d:"I found tiny round rocks rich in a mineral called hematite. They are clues that liquid water once soaked this ground. I drove more than 45 km.",
+fun:"A huge dust storm hid the Sun in 2018 and I fell asleep for good. NASA ended my mission in February 2019."},
+{i:"wave",y:"2018 to 2022",n:"InSight",t:"Mars' doctor",s:"Quiet since 2022",
+say:"I'm InSight. I stay in one place and put a super-sensitive seismometer on the ground to listen to Mars' heartbeat.",
+d:"I felt more than 1,300 marsquakes. Their waves showed that Mars has a liquid core about 1,830 km wide.",
+fun:"Dust slowly covered my solar panels until I ran out of power in December 2022."},
+{i:"copter",y:"2021 to 2024",n:"Ingenuity",t:"The first helicopter on another world",s:"Resting since 2024",
+say:"I'm Ingenuity, a tiny helicopter. Mars' air is very thin, so my blades spin super fast to lift me up.",
+d:"I proved that controlled flight is possible on another planet. Now NASA thinks about flying machines that can explore Mars from the sky.",
+fun:"I was meant to fly 5 times. I flew 72! I now rest in Jezero Crater."}]}};
+const IQ={
+"Surveyor 3":["If you landed on the Moon, how would you test if the ground is safe?","Scoop some dust and press on it, just like Surveyor 3 did."],
+"The Laser Mirror":["Why can a mirror last longer than a machine with batteries?","It has no parts that run out or break, so it can wait quietly."],
+"ALSEP Science Station":["What would you listen for if you were a moon-shake listener?","Tiny shakes from deep inside, like footsteps from the Moon's insides."],
+"Moon Buggy (LRV)":["Where would you drive the Moon Buggy first?","Maybe to a crater's edge, where fresh rocks tell old stories."],
+"Far Ultraviolet Camera":["What would you point a telescope at from the Moon?","Earth's glow, bright stars, or faraway galaxies."],
+"Viking 1":["What questions would you ask the Martian soil?","Is there water? Is anything alive? What is it made of?"],
+"Sojourner":["How can a small rover help a big lander?","It can roll to rocks that are too far for the lander to reach."],
+"Opportunity":["How would you keep a rover going for many years?","Keep its solar panels clean and let it rest in winter and dust storms."],
+"InSight":["Why listen to the ground instead of taking photos?","Shakes travel through the inside of a planet and show what we cannot see."],
+"Ingenuity":["What could a Mars helicopter scout for explorers?","Safe roads, cool rocks and cliffs, all from above."]};
+const MP={moon:[[28,50,"Surveyor 3"],[62,40,"Laser Mirror"],[50,18,"ALSEP"],[72,66,"Moon Buggy"],[36,78,"UV Camera"]],mars:[[36,24,"Viking 1"],[20,46,"Sojourner"],[50,56,"Opportunity"],[78,40,"InSight"],[64,78,"Ingenuity"]]};
+let snd=true,AC;const stars=new Set();
+const $=id=>document.getElementById(id);
+function beep(f,d){if(!snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+(d||.12))}catch(e){}}
+function say(m){$("bub").textContent=t(m)}
+function speak(t){if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.95;u.lang=L()?"ar":"en-US";speechSynthesis.speak(u)}
+function star(id){if(stars.has(id))return;stars.add(id);$("sc").textContent=stars.size;$("bar").style.width=stars.size*10+"%";beep(880);$("cb").hidden=stars.size<10;say(stars.size<10?t("New star!")+" "+stars.size+t(" of 10"):"All 10 stars! You earned a certificate!")}
+$("sb").onclick=()=>{snd=!snd;$("sb").textContent=t(snd?"Sound: on":"Sound: off")};
+$("cb").onclick=()=>$("cert").showModal();
+$("nm").oninput=()=>$("cn").textContent=$("nm").value||"Explorer";
+$("cp").onclick=()=>print();$("cx").onclick=()=>$("cert").close();
+function post(){
+const m=$("map");m.setAttribute("aria-label","Stylized map, not to scale");
+m.innerHTML=MP[world].map((p,k)=>`<button style="left:${p[0]}%;top:${p[1]}%" data-k="${k}">${L()?AI[W[world].items[k].n].n:p[2]}</button>`).join("");
+m.querySelectorAll("button").forEach(b=>b.onclick=()=>{const d=document.querySelector("#c"+b.dataset.k+" details");d.open=true;d.scrollIntoView({block:"center"})});
+list.querySelectorAll("details").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)star(d.dataset.n)}));
+list.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{const x0=W[world].items[b.dataset.l],x=L()?{...x0,...AI[x0.n]}:x0;speak(x.say+" "+x.d+" "+x.fun)});
+list.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{b.nextElementSibling.hidden=false;beep(520)});
+say(world==="moon"?"Welcome to the Moon! Tap a spot on the map.":"Welcome to Mars! Tap a spot on the map.")}
+const gr=$("gr"),gs=$("gs"),gb=$("gb");let gsc=0,gt,go,left=0;
+gr.innerHTML=Array.from({length:9},()=>'<div class="hole"><button class="rock" hidden aria-label="Collect rock"></button></div>').join("");
+const rocks=[...gr.querySelectorAll(".rock")];
+const gtxt=()=>gs.textContent=L()?"الصخور: "+gsc+"، الوقت: "+left:"Rocks: "+gsc+", time: "+left+"s";
+rocks.forEach(r=>r.onclick=()=>{r.hidden=true;gsc++;beep(600+gsc*25,.08);gtxt()});
+gb.onclick=()=>{clearInterval(gt);clearInterval(go);gsc=0;left=20;gb.disabled=true;gtxt();say("Quick, collect the rocks!");
+gt=setInterval(()=>{left--;gtxt();if(left<=0){clearInterval(gt);clearInterval(go);rocks.forEach(r=>r.hidden=true);gb.disabled=false;gb.textContent=t("Play again");gs.textContent=L()?"جمعت "+gsc+" صخرة!":"You collected "+gsc+" rocks!";say(gsc>=12?"Wow, a space champion!":"Nice job! Play again to beat your score.");beep(990,.3)}},1000);
+go=setInterval(()=>{rocks.forEach(r=>r.hidden=true);rocks[Math.floor(Math.random()*9)].hidden=false},800)};
+const wf=()=>{const w=+$("wk").value||0,m=(w*.165).toFixed(1),r=(w*.38).toFixed(1);$("wr").textContent=L()?`على القمر سيكون وزنك نحو ${m} كجم، وعلى المريخ نحو ${r} كجم. جسمك لا يتغير، الجاذبية فقط هي التي تتغير. وعلى القمر تقفز أعلى بنحو ست مرات!`:`On the Moon you would weigh about ${m} kg. On Mars you would weigh about ${r} kg. Your body stays the same, only gravity changes. On the Moon you could jump about six times higher!`};
+$("wk").oninput=wf;wf();
+const fmt=h=>{const d=h/24;return d<2?Math.round(h)+(L()?" ساعة":" hours"):d<365?Math.round(d)+(L()?" يومًا":" days"):(d/365).toFixed(1)+(L()?" سنة":" years")};
+document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{const v=+b.dataset.v,a=fmt(384400/v),c=fmt(54600000/v);$("tr").textContent=L()?`بسرعة ${v} كم/س يصل إلى القمر في ${a}، وإلى المريخ (عند أقرب مسافة وبخط مستقيم) في ${c}. الرحلات الحقيقية منحنية فتستغرق أطول.`:`At ${v.toLocaleString("en")} km/h, the Moon takes ${a}. Mars, at its closest and in a straight line, takes ${c}. Real trips curve, so they take longer.`;beep(500);say("Space is really, really big!")});
+$("sp").onclick=()=>{const a=[...W.moon.items,...W.mars.items],x=a[Math.floor(Math.random()*a.length)];say((L()?AI[x.n].n+": "+AI[x.n].fun:x.n+": "+x.fun));beep(740)};
+let first=null,lock=false,found=0,tries=0;
+function mshuf(){const k=Object.keys(IC),d=[...k,...k].sort(()=>Math.random()-.5);found=0;tries=0;first=null;lock=false;$("ms").textContent="";
+$("mg").innerHTML=d.map(t=>`<button class="mc" data-t="${t}" aria-label="Card"><svg viewBox="0 0 64 64" aria-hidden="true">${IC[t]}</svg></button>`).join("");
+$("mg").querySelectorAll(".mc").forEach(c=>c.onclick=()=>{if(lock||c.classList.contains("up")||c.classList.contains("ok"))return;c.classList.add("up");beep(500,.05);
+if(!first){first=c;return}
+tries++;
+if(first.dataset.t===c.dataset.t){first.classList.add("ok");c.classList.add("ok");first=null;found++;beep(880);if(found===k.length){$("ms").textContent=L()?"أنهيتها في "+tries+" محاولة!":"You did it in "+tries+" tries!";say("Memory champion!")}}
+else{lock=true;setTimeout(()=>{first.classList.remove("up");c.classList.remove("up");first=null;lock=false},800)}})}
+$("mb").onclick=mshuf;mshuf();
+const fl=$("fl");$("fh").innerHTML=IC.copter;
+let fy=70,fv=0,fup=false,fon=false,ft=0,fob=[],fid;
+const fend=w=>{fon=false;cancelAnimationFrame(fid);$("fb").disabled=false;$("fb").textContent=t("Fly again");$("fs").textContent=t(w?"You flew for 20 seconds!":"Crash! Try again.");say(w?"Great flying, pilot!":"Oops! Try again.");beep(w?990:220,.3)};
+$("fb").onclick=()=>{fob.forEach(o=>o.e.remove());fob=[];fy=70;fv=0;ft=0;fon=true;$("fb").disabled=true;let last=performance.now(),sp=0;
+const step=n=>{const dt=Math.min(.05,(n-last)/1000);last=n;ft+=dt;sp+=dt;fv=Math.max(-200,Math.min(200,fv+(fup?-520:400)*dt));fy=Math.max(0,fy+fv*dt);
+if(fy>152){fend(false);return}
+if(sp>1.1){sp=0;const e=document.createElement("div");e.className="dust";fl.appendChild(e);fob.push({e,x:fl.clientWidth,y:Math.random()*160})}
+const hx=fl.clientWidth*.12+8;
+for(const o of fob){o.x-=170*dt;o.e.style.transform="translate("+o.x+"px,"+o.y+"px)";if(o.x+30>hx&&o.x+6<hx+32&&o.y+30>fy+8&&o.y+6<fy+40){fend(false);return}}
+$("fh").style.transform="translateY("+fy+"px)";
+$("fs").textContent=(L()?"الوقت: ":"Time: ")+Math.max(0,Math.ceil(20-ft));
+if(ft>=20){fend(true);return}
+fid=requestAnimationFrame(step)};fid=requestAnimationFrame(step)};
+fl.onpointerdown=$("fu").onpointerdown=()=>{fup=true};
+addEventListener("pointerup",()=>{fup=false});
+addEventListener("keydown",e=>{if(e.code==="Space"&&fon){fup=true;e.preventDefault()}});
+addEventListener("keyup",e=>{if(e.code==="Space")fup=false});
+function tl(){const a=[];for(const w of["moon","mars"])W[w].items.forEach((x,k)=>a.push({w,k,x,y:parseInt(x.y)}));a.sort((p,q)=>p.y-q.y);
+$("tl").innerHTML=a.map((o,i)=>`<button class="tn ${o.w}" style="animation-delay:${i*.12}s" data-w="${o.w}" data-k="${o.k}"><i></i><b>${o.x.y.split(" ")[0]}</b><span>${L()?AI[o.x.n].n:o.x.n}</span></button>`).join("");
+$("tl").querySelectorAll("button").forEach(b=>b.onclick=()=>{world=b.dataset.w;render();const d=document.querySelector("#c"+b.dataset.k+" details");d.open=true;d.scrollIntoView({block:"center"})})}
+function applyLang(){const h=document.documentElement;h.lang=lang;h.dir=L()?"rtl":"ltr";$("lg").textContent=L()?"English":"العربية";
+const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+while(n=w.nextNode()){const p=n.parentElement;if(!p||p.closest("script,#list,#map,#tl,#intro,#sb,#bub,#tr,#wr,#ms,#gs,#fs,#qt,#qo,#qf,#qn,#cn,#lg,#gb,#fb,#sc"))continue;
+if(n._o===undefined){const k=n.nodeValue.trim();if(!k||!AR[k])continue;n._o=n.nodeValue;n._k=k}
+n.nodeValue=L()?n._o.replace(n._k,AR[n._k]):n._o}
+$("nm").placeholder=t("Type your name");$("sb").textContent=t(snd?"Sound: on":"Sound: off");$("gb").textContent=t("Start game");$("fb").textContent=t("Start flying");
+document.title=t("Abandoned but Not Forgotten");render();tl();ask();wf()}
+$("lg").onclick=()=>{lang=L()?"en":"ar";applyLang()};
+let world="moon";
+const root=document.documentElement,list=document.getElementById("list");
+function render(){
+root.dataset.world=world;
+document.getElementById("intro").textContent=L()?INT[world]:W[world].intro;
+list.innerHTML=W[world].items.map((x0,k)=>{const x=L()?{...x0,...AI[x0.n]}:x0,r=L()?[x.q,x.a]:IQ[x0.n];return `<li id="c${k}"><details data-n="${x0.n}"><summary><svg class="ic" viewBox="0 0 64 64" aria-hidden="true">${IC[x.i]}</svg><span><span class="yr">${x.y}</span><h3>${x.n}</h3><span class="tag">${x.t}</span><br><span class="st">${x.s}</span></span></summary><div class="body">${im(x0.n)}<p class="say">${x.say}</p><p><b>${t("What I found:")}</b> ${x.d}</p><p><b>${t("Fun fact:")}</b> ${x.fun}</p><div class="act"><button class="snd" data-l="${k}">${t("Listen to my story")}</button></div><p><b>${t("Think:")}</b> ${r[0]}</p><button class="snd" data-r>${t("Show an idea")}</button><p hidden>${r[1]}</p><p><a href="https://images.nasa.gov/search?q=${encodeURIComponent(NQ[x0.n])}" target="_blank" rel="noopener">${t("See real NASA photos")}</a></p></div></details></li>`}).join("");
+document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.w===world));post();
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{world=b.dataset.w;render()});
+const sky=document.getElementById("sky");let s="";
+for(let k=0;k<45;k++)s+=`<circle class="star" cx="${(k*97)%700}" cy="${(k*53)%160}" r="${1+k%3*.6}" fill="#fff" style="animation-delay:${(k%7)*.4}s"/>`;
+sky.insertAdjacentHTML("afterbegin",s);
+render();tl();
+const Q=[
+{q:"How do scientists know the Moon is moving away from us?",o:["They shine lasers at mirrors left by astronauts","They measure the Moon's shadow","They ask the astronauts"],a:0,e:"The laser bounces back, and the travel time shows the distance."},
+{q:"What did InSight discover about Mars?",o:["It has a huge ocean today","It has a liquid core","It has thick air like Earth"],a:1,e:"Marsquake waves revealed the core."},
+{q:"How many flights was Ingenuity planned to make?",o:["72","20","5"],a:2,e:"Only 5 test flights were planned. It flew 72!"}];
+let qi=0;
+const qt=document.getElementById("qt"),qo=document.getElementById("qo"),qf=document.getElementById("qf"),qn=document.getElementById("qn");
+function ask(){
+const c=(L()?QA:Q)[qi];qt.textContent=c.q;qf.textContent="";qn.hidden=true;qo.innerHTML="";
+c.o.forEach((t,k)=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>{
+[...qo.children].forEach((x,j)=>{x.disabled=true;x.className=j===c.a?"ok":"no"});
+qf.textContent=t(k===c.a?"Yes!":"Not quite.")+" "+c.e;if(k===c.a){beep(880);say("Great answer!")}else say("Good try!");
+qn.hidden=false;qn.textContent=t(qi<Q.length-1?"Next question":"Play again")};qo.appendChild(b)});
+}
+qn.onclick=()=>{qi=(qi+1)%Q.length;ask()};
+ask();
+</script>
+</body>
+</html>
